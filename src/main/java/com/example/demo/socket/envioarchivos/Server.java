@@ -1,5 +1,10 @@
-package com.example.demo.socket;
+package com.example.demo.socket.envioarchivos;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -17,13 +22,26 @@ public class Server {
 			
 			while(true) {
 				
-				System.out.println("-----1 Iniciando server socket ---------");
+				System.out.println("-----1 Iniciando server socket >> Tarco << ---------");
 				System.out.println("-----2 A la espera del ClientSocket -------");
 				clientSocket = serverSocket.accept();
 				
 				System.out.println("----3 Llego el cliente");
 				
-				Thread.sleep(3000); // 3 segundos
+				
+				File fileOrigen = new File("C:/Users/Franklin/Documents/server/Java-Tarco.png");
+				FileInputStream fis = new FileInputStream(fileOrigen);
+				DataOutputStream salida = new DataOutputStream(clientSocket.getOutputStream());
+				
+				int byteLeidos;
+				while( (byteLeidos = fis.read()) != -1) {
+					salida.write(byteLeidos);
+				}
+				
+				fis.close();
+				salida.close();
+				
+				
 				
 				System.out.println("------4 Finaliza la atencion del cliente");
 				clientSocket.close();

@@ -1,8 +1,11 @@
-package com.example.demo.socket.mensaje;
+package com.example.demo.socket.envioarchivos;
 
-import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -16,21 +19,24 @@ public class Client {
 		
 		try {
 			Socket clientSocket = new Socket(IP,PORT);
-			System.out.println("---------1 Iniciando comunicación ----------");
+			System.out.println("---------1 Iniciando comunicación ----------");		
 			
-			BufferedReader entrada = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+			File fileDestino = new File("C:/Users/Franklin/Documents/cliente/Java-Tarco2.png");
+			FileOutputStream fos = new FileOutputStream(fileDestino);
+			DataInputStream entrada = new DataInputStream(clientSocket.getInputStream());
 			
-			PrintWriter salida = new PrintWriter(clientSocket.getOutputStream(),true);
+			int byteLeidos;
+			while( (byteLeidos = entrada.read()) != -1) {
+				fos.write(byteLeidos);
+			}
 			
-			salida.println("Platinium");
-			
-			String precio = entrada.readLine();
-			
-			System.out.println("El precio es --> " + precio);
-			
+			fos.close();
+			entrada.close();
+					
 			System.out.println("---------2 Finalizando comunicación --------");
 			
 			clientSocket.close();
+			
 			
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
